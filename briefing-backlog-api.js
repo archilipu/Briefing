@@ -128,9 +128,16 @@ function setTopicFormEnabled(enabled) {
 }
 
 async function api(path, options = {}) {
-  const baseUrl = window.BRIEFING_API_BASE || "";
+  const baseUrl = String(window.BRIEFING_API_BASE || "").trim().replace(/\/+$/, "");
   if (!baseUrl || baseUrl.includes("REPLACE_WITH_BACKEND_URL")) {
     throw new Error("Configura briefing-config.js con la URL del backend.");
+  }
+
+  let requestUrl = "";
+  try {
+    requestUrl = new URL(path, `${baseUrl}/`).toString();
+  } catch {
+    throw new Error(`La URL del backend no es valida: ${baseUrl}`);
   }
 
   const headers = new Headers(options.headers || {});
@@ -139,7 +146,7 @@ async function api(path, options = {}) {
     headers.set("Authorization", `Bearer ${session.sessionToken}`);
   }
 
-  const response = await fetch(`${baseUrl}${path}`, {
+  const response = await fetch(requestUrl, {
     method: options.method || "GET",
     headers,
     body: options.body ? JSON.stringify(options.body) : undefined
