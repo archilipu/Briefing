@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="refresh" content="0; url=./briefing-backlog.html">
+  <script>
+    window.location.replace("./briefing-backlog.html");
+  </script>
+  <title>Show & Share Hub</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">NTT DATA · Executive Exchange 2026</p>
+        <h1>Show &amp; Share Hub</h1>
+        <p class="hero-copy">Backlog de temas, votación mensual y seguimiento de sesiones con una experiencia más clara para administración y participación.</p>
+      </div>
+      <div class="hero-side">
+        <div class="access-card">
+          <div>
+            <p class="section-kicker">Acceso</p>
+            <h2>Modo de uso</h2>
+          </div>
+          <div class="mode-switch" id="modeSwitch">
+            <button type="button" class="mode-btn active" data-mode="user">Modo user</button>
+            <button type="button" class="mode-btn" data-mode="admin">Modo admin</button>
+          </div>
+          <p class="mode-copy" id="modeDescription"></p>
+        </div>
+        <div class="hero-stats" id="heroStats"></div>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="panel panel-accent" data-visible-for="admin,user">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Alta de temas</p>
+            <h2>Nuevo tema al backlog</h2>
+          </div>
+        </div>
+
+        <form id="topicForm" class="form-grid">
+          <label>
+            <span>Título *</span>
+            <input type="text" name="title" required maxlength="120">
+          </label>
+          <label>
+            <span>Ponente *</span>
+            <input type="text" name="speaker" required maxlength="120">
+          </label>
+          <label class="full">
+            <span>Descripción *</span>
+            <textarea name="description" required rows="4" maxlength="500"></textarea>
+          </label>
+          <label>
+            <span>Categoría</span>
+            <input type="text" name="category" maxlength="80" placeholder="IA, procesos, cliente, herramientas...">
+          </label>
+          <label>
+            <span>Propuesto por</span>
+            <input type="text" name="proposedBy" maxlength="120">
+          </label>
+          <label>
+            <span>Impacto esperado</span>
+            <select name="impact">
+              <option value="">Selecciona</option>
+              <option value="Alto">Alto</option>
+              <option value="Medio">Medio</option>
+              <option value="Bajo">Bajo</option>
+            </select>
+          </label>
+          <label>
+            <span>Área / equipo</span>
+            <input type="text" name="area" maxlength="120">
+          </label>
+          <label>
+            <span>Material previo</span>
+            <input type="url" name="materialsUrl" placeholder="https://...">
+          </label>
+          <label>
+            <span>Duración estimada</span>
+            <select name="duration">
+              <option value="20+10">20 min + 10 min Q&amp;A</option>
+              <option value="15+10">15 min + 10 min Q&amp;A</option>
+              <option value="10+5">10 min + 5 min Q&amp;A</option>
+            </select>
+          </label>
+          <label class="full">
+            <span>Notas internas</span>
+            <textarea name="notes" rows="2" maxlength="300"></textarea>
+          </label>
+          <div class="full form-actions">
+            <button type="submit" class="primary">Guardar tema</button>
+            <button type="reset" class="ghost">Limpiar</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel" data-visible-for="admin">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Backlog</p>
+            <h2>Temas registrados</h2>
+          </div>
+          <div class="toolbar">
+            <input id="topicSearch" type="search" placeholder="Buscar por título, ponente o categoría">
+            <select id="topicFilter">
+              <option value="all">Todos</option>
+              <option value="active">Activos</option>
+              <option value="selected">Seleccionados</option>
+              <option value="completed">Tratados</option>
+              <option value="discarded">Descartados</option>
+            </select>
+          </div>
+        </div>
+        <div id="topicList" class="card-list"></div>
+      </section>
+
+      <section class="panel" data-visible-for="admin,user">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Votación mensual</p>
+            <h2>Priorización del siguiente mes</h2>
+          </div>
+        </div>
+
+        <div class="vote-grid">
+          <form id="voteCycleForm" class="mini-form" data-visible-for="admin">
+            <h3>Nueva convocatoria</h3>
+            <label>
+              <span>Mes de votación</span>
+              <input type="month" name="month" required>
+            </label>
+            <label>
+              <span>Temas a seleccionar en sesión</span>
+              <input type="number" name="topicsPerSession" min="1" max="5" value="2" required>
+            </label>
+            <label>
+              <span>Votos por persona</span>
+              <input type="number" name="votesPerPerson" min="1" max="5" value="2" required>
+            </label>
+            <button type="submit" class="primary">Crear ciclo</button>
+          </form>
+
+          <form id="voteForm" class="mini-form">
+            <h3>Registrar voto</h3>
+            <label>
+              <span>Ciclo</span>
+              <select name="cycleId" id="voteCycleSelect" required></select>
+            </label>
+            <label>
+              <span>Votante *</span>
+              <input type="text" name="voterName" required maxlength="120" placeholder="Nombre y apellido">
+            </label>
+            <label>
+              <span>Email / alias</span>
+              <input type="text" name="voterKey" maxlength="120" placeholder="opcional, para evitar duplicados">
+            </label>
+            <label class="full">
+              <span>Temas elegidos *</span>
+              <div id="voteTopics" class="checkbox-list"></div>
+            </label>
+            <button type="submit" class="primary">Guardar voto</button>
+          </form>
+        </div>
+
+        <div id="voteBoards" class="card-list spaced"></div>
+      </section>
+
+      <section class="panel" data-visible-for="admin">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Sesiones</p>
+            <h2>Seguimiento y aprendizaje</h2>
+          </div>
+        </div>
+
+        <div class="session-grid">
+          <form id="sessionForm" class="mini-form">
+            <h3>Registrar sesión</h3>
+            <label>
+              <span>Fecha *</span>
+              <input type="date" name="date" required>
+            </label>
+            <label>
+              <span>Asistentes</span>
+              <input type="number" name="attendance" min="0" max="90" value="0">
+            </label>
+            <label>
+              <span>Valoración media</span>
+              <input type="number" name="rating" min="0" max="5" step="0.1" placeholder="0-5">
+            </label>
+            <label>
+              <span>Enlace a grabación</span>
+              <input type="url" name="recordingUrl" placeholder="https://...">
+            </label>
+            <label class="full">
+              <span>Temas tratados *</span>
+              <div id="sessionTopics" class="checkbox-list"></div>
+            </label>
+            <label class="full">
+              <span>Valoración cualitativa</span>
+              <textarea name="feedback" rows="3" maxlength="500" placeholder="Resumen de feedback, acuerdos o próximos pasos"></textarea>
+            </label>
+            <button type="submit" class="primary">Guardar sesión</button>
+          </form>
+
+          <div class="mini-form">
+            <h3>Indicadores</h3>
+            <div id="metricsPanel" class="metrics-grid"></div>
+          </div>
+        </div>
+
+        <div id="sessionList" class="card-list spaced"></div>
+      </section>
+
+      <section class="panel" data-visible-for="admin">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Datos</p>
+            <h2>Respaldo y traspaso</h2>
+          </div>
+        </div>
+
+        <div class="data-tools">
+          <button id="exportBtn" class="ghost">Exportar JSON</button>
+          <label class="ghost file-button">
+            Importar JSON
+            <input id="importInput" type="file" accept=".json">
+          </label>
+          <button id="resetBtn" class="danger">Reset demo</button>
+        </div>
+        <p class="footnote">Esta primera versión guarda los datos en el navegador. El modelo está preparado para migrarlo a una solución multiusuario.</p>
+      </section>
+    </main>
+  </div>
+
+  <template id="emptyStateTemplate">
+    <div class="empty-state">
+      <p>No hay información para mostrar todavía.</p>
+    </div>
+  </template>
+
+  <script src="./app.js"></script>
+</body>
+</html>

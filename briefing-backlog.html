@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Briefing</title>
+  <link rel="stylesheet" href="./briefing-backlog.css">
+</head>
+<body>
+  <div class="app-shell">
+    <section id="loginScreen" class="login-wrap">
+      <div class="login-card">
+        <p class="eyebrow">Acceso</p>
+        <h1>Briefing</h1>
+        <p class="muted">Empleados: entra con tu numero de empleado. Administracion y seguimiento solo estan disponibles para lomartin.</p>
+
+        <form id="employeeLoginForm" class="form-stack">
+          <label>
+            <span>Numero de empleado</span>
+            <input type="text" name="employeeId" inputmode="numeric" autocomplete="username" required>
+          </label>
+          <button type="submit" class="primary">Entrar como empleado</button>
+        </form>
+
+        <div class="divider">Admin</div>
+
+        <form id="adminLoginForm" class="form-stack">
+          <label>
+            <span>Usuario</span>
+            <input type="text" name="username" autocomplete="username" required>
+          </label>
+          <label>
+            <span>Password</span>
+            <input type="password" name="password" autocomplete="current-password" required>
+          </label>
+          <button type="submit" class="ghost">Entrar como admin</button>
+        </form>
+
+        <p id="loginMessage" class="message"></p>
+      </div>
+    </section>
+
+    <section id="appScreen" class="hidden">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow" id="sessionBadge">Briefing</p>
+          <h1>Briefing</h1>
+        </div>
+        <div class="session-tools">
+          <span id="sessionLabel" class="pill pending"></span>
+          <button type="button" id="logoutButton" class="quiet">Salir</button>
+        </div>
+      </header>
+
+      <nav class="tabs" id="tabs">
+        <button type="button" class="tab is-active" data-tab="voting">Votacion</button>
+        <button type="button" class="tab" data-tab="admin" data-admin-only>Administracion</button>
+        <button type="button" class="tab" data-tab="tracking" data-admin-only>Seguimiento</button>
+      </nav>
+
+      <main class="page-stack">
+        <section class="screen is-active" data-screen="voting">
+          <section class="hero-row">
+            <div>
+              <p class="section-kicker" id="publicBriefingEdition">Briefing</p>
+              <h2 id="publicBriefingTitle">Briefing</h2>
+            </div>
+            <div class="hero-metrics">
+              <span id="publicVotingDeadline">Fin votacion: -</span>
+              <span id="publicVotingStatus" class="pill">Sin briefing</span>
+            </div>
+          </section>
+
+          <section class="voting-layout">
+            <section class="panel compact-panel">
+              <div class="section-heading">
+                <div>
+                  <p class="section-kicker">Proponer</p>
+                  <h2>Nuevo tema</h2>
+                </div>
+              </div>
+
+              <form id="topicForm" class="form-stack">
+                <label>
+                  <span>Titulo</span>
+                  <input type="text" name="title" maxlength="120" required>
+                </label>
+                <label>
+                  <span>Descripcion breve</span>
+                  <textarea name="description" rows="4" maxlength="300" required></textarea>
+                </label>
+                <button type="submit" class="primary">Crear tema</button>
+              </form>
+            </section>
+
+            <section class="panel">
+              <div class="section-heading">
+                <div>
+                  <p class="section-kicker">Votacion</p>
+                  <h2>Temas a votar</h2>
+                </div>
+              </div>
+
+              <div class="table-head">
+                <span>#</span>
+                <span>Tema</span>
+                <span>Votos</span>
+                <span>Accion</span>
+              </div>
+              <div id="publicTopicBoard" class="table-body"></div>
+            </section>
+          </section>
+        </section>
+
+        <section class="screen" data-screen="admin">
+          <section class="panel">
+            <div class="section-heading">
+              <div>
+                <p class="section-kicker">Administracion</p>
+                <h2>Briefings y empleados</h2>
+              </div>
+            </div>
+
+            <div class="admin-grid">
+              <section class="subpanel">
+                <h3>Alta de briefing</h3>
+                <form id="briefingForm" class="form-stack">
+                  <label>
+                    <span>Nombre</span>
+                    <input type="text" name="name" maxlength="120" value="Briefing" required>
+                  </label>
+                  <label>
+                    <span>Periodo o edicion</span>
+                    <input type="text" name="edition" maxlength="60" placeholder="2026-W14" required>
+                  </label>
+                  <label>
+                    <span>Fecha del briefing</span>
+                    <input type="datetime-local" name="briefingDate" required>
+                  </label>
+                  <label>
+                    <span>Fin de votacion</span>
+                    <input type="datetime-local" name="votingEndsAt" required>
+                  </label>
+                  <label>
+                    <span>Estado inicial</span>
+                    <select name="status">
+                      <option value="open">Abierto</option>
+                      <option value="closed">Cerrado</option>
+                      <option value="held">Celebrado</option>
+                      <option value="archived">Archivado</option>
+                    </select>
+                  </label>
+                  <button type="submit" class="primary">Crear briefing</button>
+                </form>
+              </section>
+
+              <section class="subpanel">
+                <h3>Sesiones de briefing</h3>
+                <div id="adminBriefingList" class="stack"></div>
+              </section>
+
+              <section class="subpanel">
+                <h3>Alta individual de empleado</h3>
+                <form id="employeeForm" class="form-stack">
+                  <label>
+                    <span>Numero de empleado</span>
+                    <input type="text" name="employeeId" inputmode="numeric" required>
+                  </label>
+                  <button type="submit" class="ghost">Dar de alta</button>
+                </form>
+
+                <div class="divider">Carga masiva</div>
+
+                <form id="employeeBulkForm" class="form-stack">
+                  <label>
+                    <span>Numeros de empleado, uno por linea</span>
+                    <textarea name="employeeIds" rows="6"></textarea>
+                  </label>
+                  <button type="submit" class="ghost">Importar</button>
+                </form>
+
+                <p class="muted" id="employeeCount"></p>
+                <div id="employeeList" class="employee-list"></div>
+              </section>
+            </div>
+          </section>
+        </section>
+
+        <section class="screen" data-screen="tracking">
+          <section class="panel">
+            <div class="section-heading">
+              <div>
+                <p class="section-kicker">Seguimiento</p>
+                <h2>Estados de temas</h2>
+              </div>
+              <select id="trackingBriefingSelect"></select>
+            </div>
+
+            <div id="trackingBoard" class="stack"></div>
+          </section>
+        </section>
+      </main>
+    </section>
+  </div>
+
+  <template id="emptyStateTemplate">
+    <div class="empty-state">
+      <p>No hay elementos para mostrar.</p>
+    </div>
+  </template>
+
+  <script src="./briefing-backlog-auth.js"></script>
+</body>
+</html>
