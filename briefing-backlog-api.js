@@ -384,8 +384,9 @@ async function bootstrap() {
 
 refs.employeeLoginForm.addEventListener("submit", async (event) => {
   event.preventDefault();
+  const form = refs.employeeLoginForm;
   try {
-    const employeeId = normalizeEmployeeId(new FormData(event.currentTarget).get("employeeId"));
+    const employeeId = normalizeEmployeeId(new FormData(form).get("employeeId"));
     const data = await api("/api/auth/login/employee", {
       method: "POST",
       body: { employeeId }
@@ -397,7 +398,7 @@ refs.employeeLoginForm.addEventListener("submit", async (event) => {
       employeeId: data.employeeId
     };
     activeTab = "voting";
-    event.currentTarget.reset();
+    form?.reset();
     await refreshData();
   } catch (error) {
     setLoginMessage(`${error.message} [backend: ${describeBackendBase()}]`, true);
@@ -406,8 +407,9 @@ refs.employeeLoginForm.addEventListener("submit", async (event) => {
 
 refs.adminLoginForm.addEventListener("submit", async (event) => {
   event.preventDefault();
+  const form = refs.adminLoginForm;
   try {
-    const formData = new FormData(event.currentTarget);
+    const formData = new FormData(form);
     const data = await api("/api/auth/login/admin", {
       method: "POST",
       body: {
@@ -422,7 +424,7 @@ refs.adminLoginForm.addEventListener("submit", async (event) => {
       username: data.username
     };
     activeTab = "admin";
-    event.currentTarget.reset();
+    form?.reset();
     await refreshData();
   } catch (error) {
     setLoginMessage(`${error.message} [backend: ${describeBackendBase()}]`, true);
@@ -456,8 +458,9 @@ refs.tabs.addEventListener("click", async (event) => {
 refs.topicForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   if (!publicState.briefing) return;
+  const form = refs.topicForm;
   try {
-    const formData = new FormData(event.currentTarget);
+    const formData = new FormData(form);
     await api("/api/public/topics", {
       method: "POST",
       body: {
@@ -467,7 +470,7 @@ refs.topicForm.addEventListener("submit", async (event) => {
       }
     });
 
-    event.currentTarget.reset();
+    form?.reset();
     await refreshData();
   } catch (error) {
     alert(error.message);
@@ -493,7 +496,8 @@ refs.publicTopicBoard.addEventListener("click", async (event) => {
 
 refs.briefingForm.addEventListener("submit", async (event) => {
   event.preventDefault();
-  const formData = new FormData(event.currentTarget);
+  const form = refs.briefingForm;
+  const formData = new FormData(form);
   try {
     await api("/api/admin/briefings", {
       method: "POST",
@@ -506,7 +510,7 @@ refs.briefingForm.addEventListener("submit", async (event) => {
       }
     });
 
-    event.currentTarget.reset();
+    form?.reset();
     await refreshData();
   } catch (error) {
     alert(error.message);
@@ -548,13 +552,14 @@ refs.adminBriefingList.addEventListener("click", async (event) => {
 
 refs.employeeForm.addEventListener("submit", async (event) => {
   event.preventDefault();
+  const form = refs.employeeForm;
   try {
-    const employeeId = normalizeEmployeeId(new FormData(event.currentTarget).get("employeeId"));
+    const employeeId = normalizeEmployeeId(new FormData(form).get("employeeId"));
     await api("/api/admin/employees", {
       method: "POST",
       body: { employeeId }
     });
-    event.currentTarget.reset();
+    form?.reset();
     await refreshData();
   } catch (error) {
     alert(error.message);
@@ -563,8 +568,9 @@ refs.employeeForm.addEventListener("submit", async (event) => {
 
 refs.employeeBulkForm.addEventListener("submit", async (event) => {
   event.preventDefault();
+  const form = refs.employeeBulkForm;
   try {
-    const raw = String(new FormData(event.currentTarget).get("employeeIds") || "");
+    const raw = String(new FormData(form).get("employeeIds") || "");
     const employeeIds = raw
       .split(/\r?\n/)
       .map(normalizeEmployeeId)
@@ -574,7 +580,7 @@ refs.employeeBulkForm.addEventListener("submit", async (event) => {
       method: "POST",
       body: { employeeIds }
     });
-    event.currentTarget.reset();
+    form?.reset();
     await refreshData();
   } catch (error) {
     alert(error.message);
