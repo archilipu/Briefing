@@ -1,0 +1,66 @@
+### Login empleado
+POST http://localhost:3001/api/auth/login/employee
+Content-Type: application/json
+
+{
+  "employeeId": "130053"
+}
+
+### Login admin
+POST http://localhost:3001/api/auth/login/admin
+Content-Type: application/json
+
+{
+  "username": "lomartin",
+  "password": "12,Briefing?"
+}
+
+### Obtener briefing publico
+GET http://localhost:3001/api/public/briefing
+Authorization: Bearer REPLACE_SESSION_TOKEN
+
+### Crear briefing
+POST http://localhost:3001/api/admin/briefings
+Content-Type: application/json
+
+{
+  "name": "Briefing Operaciones",
+  "edition": "2026-W15",
+  "briefingAt": "2026-04-10T10:00:00.000Z",
+  "votingEndsAt": "2026-04-09T18:00:00.000Z",
+  "status": "open"
+}
+
+### Crear tema anonimo
+POST http://localhost:3001/api/public/topics
+Content-Type: application/json
+Authorization: Bearer REPLACE_SESSION_TOKEN
+
+{
+  "briefingId": "REPLACE_BRIEFING_ID",
+  "title": "Dependencias con legal",
+  "description": "Aclarar impacto de validaciones legales en los plazos."
+}
+
+### Votar tema
+POST http://localhost:3001/api/public/votes
+Content-Type: application/json
+Authorization: Bearer REPLACE_SESSION_TOKEN
+
+{
+  "briefingId": "REPLACE_BRIEFING_ID",
+  "topicId": "REPLACE_TOPIC_ID"
+}
+
+### Cambiar estado de un tema
+PATCH http://localhost:3001/api/admin/topics/REPLACE_TOPIC_ID
+Content-Type: application/json
+Authorization: Bearer REPLACE_ADMIN_SESSION_TOKEN
+
+{
+  "status": "treated"
+}
+
+### Listar empleados
+GET http://localhost:3001/api/admin/employees
+Authorization: Bearer REPLACE_ADMIN_SESSION_TOKEN
