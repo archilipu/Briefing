@@ -114,6 +114,10 @@ function setLoginMessage(message, isError = false) {
   refs.loginMessage.style.color = isError ? "var(--danger)" : "var(--muted)";
 }
 
+function describeBackendBase() {
+  return String(window.BRIEFING_API_BASE || "").trim() || "(vacio)";
+}
+
 function renderEmpty(container, message) {
   container.innerHTML = "";
   const node = refs.emptyStateTemplate.content.cloneNode(true);
@@ -373,7 +377,7 @@ async function bootstrap() {
     session = null;
     persistUi();
     renderShell();
-    setLoginMessage(error.message, true);
+    setLoginMessage(`${error.message} [backend: ${describeBackendBase()}]`, true);
   }
 }
 
@@ -395,7 +399,7 @@ refs.employeeLoginForm.addEventListener("submit", async (event) => {
     event.currentTarget.reset();
     await refreshData();
   } catch (error) {
-    setLoginMessage(error.message, true);
+    setLoginMessage(`${error.message} [backend: ${describeBackendBase()}]`, true);
   }
 });
 
@@ -420,7 +424,7 @@ refs.adminLoginForm.addEventListener("submit", async (event) => {
     event.currentTarget.reset();
     await refreshData();
   } catch (error) {
-    setLoginMessage(error.message, true);
+    setLoginMessage(`${error.message} [backend: ${describeBackendBase()}]`, true);
   }
 });
 
