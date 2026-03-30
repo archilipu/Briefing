@@ -137,12 +137,8 @@ async function api(path, options = {}) {
     throw new Error("Configura briefing-config.js con la URL del backend.");
   }
 
-  let requestUrl = "";
-  try {
-    requestUrl = new URL(path, `${baseUrl}/`).toString();
-  } catch {
-    throw new Error(`La URL del backend no es valida: ${baseUrl}`);
-  }
+  const requestPath = path.startsWith("/") ? path : `/${path}`;
+  const requestUrl = `${baseUrl}${requestPath}`;
 
   const headers = new Headers(options.headers || {});
   headers.set("Content-Type", "application/json");
@@ -150,11 +146,16 @@ async function api(path, options = {}) {
     headers.set("Authorization", `Bearer ${session.sessionToken}`);
   }
 
-  const response = await fetch(requestUrl, {
-    method: options.method || "GET",
-    headers,
-    body: options.body ? JSON.stringify(options.body) : undefined
-  });
+  let response;
+  try {
+    response = await fetch(requestUrl, {
+      method: options.method || "GET",
+      headers,
+      body: options.body ? JSON.stringify(options.body) : undefined
+    });
+  } catch (error) {
+    throw new Error(`${error.message} [request: ${requestUrl}]`);
+  }
 
   if (response.status === 204) return null;
 
